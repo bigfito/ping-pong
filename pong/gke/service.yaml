@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pong
+  namespace: ping-pong
+spec:
+  type: ClusterIP # This is the default value
+  selector:
+    app: pong-app
+  ports:
+    - protocol: TCP
+      port: 8082 # Port the service is listening on
+      targetPort: 8082 # Port the container is listening on (if unset, defaults to equal port value)

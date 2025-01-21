@@ -1,0 +1,29 @@
+# Stage 1: Build the application
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+
+# Set the working directory inside the container
+WORKDIR /build
+
+# Copy the Maven project files
+COPY pom.xml ./
+COPY ./pong/src ./pong/src
+COPY ./pong/pom.xml ./pong/
+
+# Build the application
+WORKDIR /build/pong
+RUN mvn clean package -DskipTests
+
+WORKDIR /build
+
+# Stage 2: Create a lightweight runtime image
+FROM eclipse-temurin:21-jre-alpine
+
+# Define application runtime variables
+VOLUME /tmp
+EXPOSE 8082
+
+# Copy the application JAR and Datadog Java Agent from the builder stage
+COPY --from=builder /build/pong/target/pong-0.0.1-SNAPSHOT.jar /app.jar
+
+# Set the entrypoint command
+ENTRYPOINT ["java", "-jar", "/app.jar"]

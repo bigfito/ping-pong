@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: handler-deployment
+  namespace: ping-pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: handler-app
+  template:
+    metadata:
+      labels:
+        app: handler-app
+    spec:
+      containers:
+        - name: handler
+          image: handler:1.0

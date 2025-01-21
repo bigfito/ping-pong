@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong-deployment
+  namespace: ping-pong
+  labels:
+    app: pong-app
+    tags.datadoghq.com/env: "dev"
+    tags.datadoghq.com/service: "pong-app"
+    tags.datadoghq.com/version: "1.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong-app
+  template:
+    metadata:
+      labels:
+        app: pong-app
+        tags.datadoghq.com/env: "dev"
+        tags.datadoghq.com/service: "pong-app"
+        tags.datadoghq.com/version: "1.0"
+    spec:
+      containers:
+        - name: pong
+          image: pong:1.0
+          ports:
+            - containerPort: 8082
+          env:
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+      restartPolicy: Always

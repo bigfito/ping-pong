@@ -1,0 +1,14 @@
+# Use the latest slim Alpine Linux image as the base
+FROM alpine:latest
+
+# Set metadata
+LABEL maintainer="Adolfo Orozco <bigfito@gmail.com>"
+LABEL description="A slim Alpine Linux image with network tools, HTTPie, and curl."
+
+# Install necessary packages
+RUN apk update && \
+    apk add --no-cache net-tools curl wget iproute2 traceroute nmap httpie htop tree ngrep \
+        kubectl
+
+# Set a default command (optional)
+CMD [ "sh" ]

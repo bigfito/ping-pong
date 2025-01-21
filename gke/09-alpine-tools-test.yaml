@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpine-tools-deployment
+  namespace: ping-pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alpine-tools
+  template:
+    metadata:
+      labels:
+        app: alpine-tools
+    spec:
+      containers:
+        - name: alpinetools
+          image: bigfito/alpine-tools:1.0

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ping-deployment
+  namespace: ping-pong
+  labels:
+    app: ping-app
+    tags.datadoghq.com/env: "dev"
+    tags.datadoghq.com/service: "ping-app"
+    tags.datadoghq.com/version: "1.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-app
+  template:
+    metadata:
+      labels:
+        app: ping-app
+        tags.datadoghq.com/env: "dev"
+        tags.datadoghq.com/service: "ping-app"
+        tags.datadoghq.com/version: "1.0"
+    spec:
+      containers:
+        - name: ping
+          #image: northamerica-south1-docker.pkg.dev/bigfito-dev/pingpong-api-mx/ping:1.0
+          image: bigfito/ping:1.0
+          ports:
+            - containerPort: 8081
+          env:
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+      restartPolicy: Always
