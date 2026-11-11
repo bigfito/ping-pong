@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "${DD_API_KEY:-}" ]; then
+  echo "Error: DD_API_KEY is not set. Export your Datadog API key before running this script."
+  exit 1
+fi
+
 DD_VALUES_FILENAME="datadog-values.yaml"
 
 clear
